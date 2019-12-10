@@ -40,13 +40,19 @@ int main(int argc, char* argv[])
 	
 
 	int iGetLines;
-	BOOL bGet = SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &iGetLines, 0);
-	if (bGet) std::cout << "Current Mouse Wheel Scroll is " << iGetLines << ".\n";
-	else std::cout << "Fail to Get Mouse Wheel Information.\n";
+	BOOL bNotLineModified = TRUE;
+	while (bNotLineModified) {
+		BOOL bGet = SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, &iGetLines, 0);
+		if (bGet) std::cout << "Current Mouse Wheel Scroll is " << iGetLines << ".\n";
+		else std::cout << "Fail to Get Mouse Wheel Information.\n";
+
+		if (iGetLines == 1) break;
+		::Sleep(1000);
+	}
 
 	BOOL bSet = SystemParametersInfo(SPI_SETWHEELSCROLLLINES, iSetLines, NULL, 0);
 	if (bSet) std::cout << "New Mouse Wheel Scroll is " << iSetLines << ".\n";
 	else std::cout << "Fail to Set Mouse Wheel Information.\n";
 
-	getchar();
+	if (!bSet) getchar();
 }
